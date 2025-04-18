@@ -1,0 +1,51 @@
+<!-- Modal: Nova Tarefa -->
+<div class="modal fade" id="novaTarefaModal" tabindex="-1" aria-labelledby="novaTarefaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'criar_tarefa' projeto.id %}">
+      {% csrf_token %}
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="novaTarefaModalLabel">Nova Tarefa</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" required />
+          </div>
+          <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" id="status" name="status" required>
+              <option value="pendente">Pendente</option>
+              <option value="em_andamento">Em andamento</option>
+              <option value="concluida">Concluída</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="prioridade" class="form-label">Prioridade</label>
+            <input
+              type="range"
+              class="form-range"
+              id="prioridade"
+              name="prioridade"
+              min="1"
+              max="5"
+              step="1"
+              value="3"
+              oninput="document.getElementById('valorPrioridade').textContent = this.value"
+            />
+            <div class="text-light">Valor: <span id="valorPrioridade">3</span></div>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

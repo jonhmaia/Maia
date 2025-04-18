@@ -1,0 +1,33 @@
+
+{% extends "core/base.html" %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+  <div class="card bg-dark border-secondary p-4" style="max-width: 400px; width: 100%;">
+    <h2 class="mb-4 text-center text-light">Criar conta</h2>
+    {% if error %}
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="name" class="form-label text-light">Nome</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label text-light">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label text-light">Senha</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-success w-100">Cadastrar</button>
+    </form>
+    <div class="text-center mt-3">
+      <small class="text-muted">Já tem conta? <a href="{% url 'login' %}" class="text-info">Entrar</a></small>
+    </div>
+  </div>
+</div>
+{% endblock %}

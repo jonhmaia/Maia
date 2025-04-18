@@ -1,0 +1,161 @@
+{% extends "core/dashboard_base.html" %}
+
+{% block content %}
+  {% if messages %}
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+      {% for msg in messages %}
+        <div class="toast show align-items-center text-bg-{{ msg.tags }} border-0 mb-2" role="alert">
+          <div class="d-flex">
+            <div class="toast-body text-light">{{ msg }}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <style>
+    .glass-kpi {
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      color: #fff;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .glass-kpi:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 40px rgba(31, 38, 135, 0.6);
+    }
+
+    .kpi-title {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .card-projeto {
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.1);
+      transition: all 0.3s ease;
+      padding: 20px;
+    }
+
+    .card-projeto:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(16, 185, 129, 0.3);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .card-projeto .card-title {
+      color: #a7f3d0;
+    }
+
+    .card-projeto .card-text {
+      color: #d1fae5;
+    }
+
+    .card-projeto .small {
+      color: #6ee7b7;
+    }
+  </style>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4" style="background-color:#1e293b ; padding: 1rem; border-radius: 7px;">
+    <h1 class="mb-0 text-light">Dashboard</h1>
+    <button type="button" class="btn btn text-light" data-bs-toggle="modal" data-bs-target="#projectModal" style="background-color: green">
+      Novo Projeto
+    </button>
+  </div>
+  <!-- KPIs -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="glass-kpi text-center h-100">
+        <div class="kpi-title">Projetos Ativos</div>
+        <div class="kpi-value">12</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-kpi text-center h-100">
+        <div class="kpi-title">Tarefas Pendentes</div>
+        <div class="kpi-value">8</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-kpi text-center h-100">
+        <div class="kpi-title">Documentos</div>
+        <div class="kpi-value">25</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-kpi text-center h-100">
+        <div class="kpi-title">Orçamento Gasto</div>
+        <div class="kpi-value">R$ 1.250</div>
+      </div>
+    </div>
+  </div>
+
+ 
+
+  <!-- Projetos -->
+  <h2 class="text-light mb-4 text-center">Projetos Recentes</h2>
+  {% for projeto in projetos %}
+<div class="col-md-6 col-lg-4">
+  <div class="card card-projeto h-100 position-relative">
+    <div class="card-body d-flex flex-column">
+      <h5 class="card-title fw-semibold">{{ projeto.nome }}</h5>
+      <p class="card-text">{{ projeto.descricao }}</p>
+      <p class="small mt-auto">Criado em: {{ projeto.criado_em|date:"d/m/Y" }}</p>
+
+      {% if projeto.id %}
+        <a href="{% url 'projeto_detalhe' projeto.id %}" class="stretched-link"></a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% empty %}
+  <p class="text-light text-center">Você ainda não tem projetos criados.</p>
+{% endfor %}
+
+
+  <!-- Modal de Novo Projeto -->
+  <div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="post" action="{% url 'project_create' %}">
+        {% csrf_token %}
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="projectModalLabel">Criar Projeto</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="id_name" class="form-label text-light">Nome</label>
+              <input type="text" class="form-control" id="id_name" name="nome" required />
+            </div>
+            <div class="mb-3">
+              <label for="id_description" class="form-label text-light">Descrição</label>
+              <textarea class="form-control" id="id_description" name="descricao" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Criar Projeto</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
+  
+{% endblock %}

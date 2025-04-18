@@ -24,11 +24,13 @@ SECRET_KEY = 'django-insecure-3!ggot(q!(ln(-1z4*qy%p=cyadg^v%viy_w7bc5w+l43f21u=
 
 import os
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = True
+
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 # SECURITY WARNING: don't run with debug turned on in production!
+
 
 
 
@@ -126,3 +128,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+from decouple import config
+
+SUPABASE_URL = config("SUPABASE_URL")
+SUPABASE_KEY = config("SUPABASE_KEY")

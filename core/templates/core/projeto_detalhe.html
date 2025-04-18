@@ -1,0 +1,72 @@
+{% extends "core/dashboard_base.html" %}
+{% block content %}
+
+<style>
+  .header-bar {
+    background-color: #1e293b;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .task-card {
+    background-color: #111827;
+    border: 1px solid #2dd4bf;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(45, 212, 191, 0.2);
+  }
+
+  .task-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    color: #a7f3d0;
+  }
+
+  .task-meta {
+    font-size: 0.875rem;
+    color: #0c57d8;
+  }
+
+  .badge-priority {
+    font-size: 0.75rem;
+    background-color: #334155;
+    color: #facc15;
+    border-radius: 0.375rem;
+    padding: 0.2rem 0.5rem;
+    margin-left: 0.5rem;
+  }
+
+  .main-content {
+    display: flex;
+    gap: 2rem;
+  }
+
+</style>
+
+<!-- Header com ações -->
+<div class="header-bar">
+  <h2 class="text-light mb-0">{{ projeto.nome }}</h2>
+  <div>
+    <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#novaTarefaModal">
+      <i class="bi bi-plus-circle me-1"></i> Nova Tarefa
+    </button>
+    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadArquivoModal">
+      <i class="bi bi-upload me-1"></i> Upload de Arquivo
+    </button>
+  </div>
+</div>
+
+
+{% include "core/modals/nova_tarefa.html" %}
+{% endblock %}
