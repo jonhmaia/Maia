@@ -108,23 +108,23 @@
 
   <!-- Projetos -->
   <h2 class="text-light mb-4 text-center">Projetos Recentes</h2>
-  {% for projeto in projetos %}
-<div class="col-md-6 col-lg-4">
-  <div class="card card-projeto h-100 position-relative">
-    <div class="card-body d-flex flex-column">
-      <h5 class="card-title fw-semibold">{{ projeto.nome }}</h5>
-      <p class="card-text">{{ projeto.descricao }}</p>
-      <p class="small mt-auto">Criado em: {{ projeto.criado_em|date:"d/m/Y" }}</p>
-
-      {% if projeto.id %}
-        <a href="{% url 'projeto_detalhe' projeto.id %}" class="stretched-link"></a>
-      {% endif %}
-    </div>
+  <div class="row g-4">
+    {% for projeto in projetos %}
+      <div class="col-12 col-md-6"> <!-- 12 colunas para mobile, 6 colunas (50%) a partir do "md" -->
+        <div class="card card-projeto h-100 position-relative">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title fw-semibold">{{ projeto.nome }}</h5>
+            <p class="small mt-auto">Criado em: {{ projeto.criado_em|date:"d/m/Y" }}</p>
+            {% if projeto.id %}
+              <a href="{% url 'projeto_detalhe' projeto.id %}" class="stretched-link"></a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-light text-center">Você ainda não tem projetos criados.</p>
+    {% endfor %}
   </div>
-</div>
-{% empty %}
-  <p class="text-light text-center">Você ainda não tem projetos criados.</p>
-{% endfor %}
 
 
   <!-- Modal de Novo Projeto -->

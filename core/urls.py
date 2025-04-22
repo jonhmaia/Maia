@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import home, login_view, cadastro_view, dashboard_view,logout_view, project_create_view, projetos_por_mes_view, projeto_detalhe_view,criar_tarefa_view
+from .views import home, login_view, cadastro_view, dashboard_view,logout_view, project_create_view, projetos_por_mes_view, projeto_detalhe_view,criar_tarefa_view,deletar_tarefa
 
 urlpatterns = [
     path("", home, name="home"),
@@ -12,6 +12,9 @@ urlpatterns = [
     path("projetos/<uuid:projeto_id>/", projeto_detalhe_view, name="projeto_detalhe"),
     path("projetos/<uuid:projeto_id>/nova-tarefa/",criar_tarefa_view, name="criar_tarefa"),
     path("api/projetos-mes/", projetos_por_mes_view, name="projetos_por_mes"),
+    path("projetos/<uuid:projeto_id>/tarefas/<uuid:tarefa_id>/deletar/", deletar_tarefa, name="deletar_tarefa")
+
     
+
 
 ]

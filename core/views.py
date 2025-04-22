@@ -6,6 +6,9 @@ from django.conf import settings
 from supabase import create_client, Client
 from postgrest.exceptions import APIError
 from .supabase_client import supabase
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Inicializa o cliente Supabase (caso necessário novamente)
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
@@ -220,3 +223,18 @@ def criar_tarefa_view(request, projeto_id):
     return redirect("projeto_detalhe", projeto_id=projeto_id)
 
 
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+@csrf_exempt
+@login_required
+def deletar_tarefa(request, projeto_id, tarefa_id):
+    if request.method == "POST":
+        try:
+            supabase.table("tarefas").delete().eq("id", str(tarefa_id)).execute()
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({"success": False, "error": "Método inválido"})
