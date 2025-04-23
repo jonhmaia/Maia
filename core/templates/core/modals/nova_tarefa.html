@@ -1,51 +1,161 @@
+<!-- Estilo para o slider -->
+<style>
+  .slider-prioridade {
+    width: 100%;
+    appearance: none;
+    height: 6px;
+    background-color: #facc15;
+    border-radius: 4px;
+    outline: none;
+    transition: background 0.3s ease;
+  }
+
+  .slider-prioridade::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background-color: #0f172a;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .slider-prioridade::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+
+  .slider-prioridade::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background-color: #0f172a;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .slider-prioridade::-moz-range-thumb:hover {
+    transform: scale(1.2);
+  }
+
+  .prioridade-indicador {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    display: inline-block;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .prioridade-1 {
+    background-color: #10b981;
+    color: #fff;
+  }
+
+  .prioridade-2 {
+    background-color: #3b82f6;
+    color: #fff;
+  }
+
+  .prioridade-3 {
+    background-color: #facc15;
+    color: #000;
+  }
+
+  .prioridade-4 {
+    background-color: #fb923c;
+    color: #000;
+  }
+
+  .prioridade-5 {
+    background-color: #ef4444;
+    color: #fff;
+  }
+</style>
+
 <!-- Modal: Nova Tarefa -->
 <div class="modal fade" id="novaTarefaModal" tabindex="-1" aria-labelledby="novaTarefaModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <form method="post" action="{% url 'criar_tarefa' projeto.id %}">
       {% csrf_token %}
-      <div class="modal-content bg-dark text-light">
+      <div class="modal-content" style="background-color: #1e293b; color: #fff; border-radius: 1rem; border: 1px solid #334155;">
         <div class="modal-header border-0">
-          <h5 class="modal-title" id="novaTarefaModalLabel">Nova Tarefa</h5>
+          <h5 class="modal-title fw-bold" id="novaTarefaModalLabel">
+            <i class="bi bi-plus-circle me-2"></i> Nova Tarefa
+          </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
+
         <div class="modal-body">
-          <div class="mb-3">
-            <label for="titulo" class="form-label">Título</label>
-            <input type="text" class="form-control" id="titulo" name="titulo" required />
-          </div>
-          <div class="mb-3">
-            <label for="descricao" class="form-label">Descrição</label>
-            <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select class="form-select" id="status" name="status" required>
-              <option value="pendente">Pendente</option>
-              <option value="em_andamento">Em andamento</option>
-              <option value="concluida">Concluída</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="prioridade" class="form-label">Prioridade</label>
-            <input
-              type="range"
-              class="form-range"
-              id="prioridade"
-              name="prioridade"
-              min="1"
-              max="5"
-              step="1"
-              value="3"
-              oninput="document.getElementById('valorPrioridade').textContent = this.value"
-            />
-            <div class="text-light">Valor: <span id="valorPrioridade">3</span></div>
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label for="titulo" class="form-label">Título</label>
+              <input
+                type="text"
+                class="form-control border-0 text-light"
+                style="background-color: #0f172a;"
+                id="titulo"
+                name="titulo"
+                placeholder="Digite o título da tarefa"
+                required>
+            </div>
+
+            <div class="col-12">
+              <label for="prioridade" class="form-label">Prioridade</label>
+              <input
+                type="range"
+                class="form-range slider-prioridade"
+                id="prioridade"
+                name="prioridade"
+                min="1"
+                max="5"
+                step="1"
+                value="3"
+                oninput="atualizarPrioridade(this)"
+              />
+              <div id="indicadorPrioridade" class="prioridade-indicador prioridade-3">
+                Prioridade: <span id="valorPrioridade">3</span>
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="modal-footer border-0">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-success">Salvar</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-1"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle me-1"></i> Criar Tarefa
+          </button>
         </div>
       </div>
     </form>
   </div>
 </div>
+
+<!-- Script para atualizar cor e indicador -->
+<script>
+  function atualizarPrioridade(slider) {
+    const value = parseInt(slider.value);
+    const indicador = document.getElementById("valorPrioridade");
+    const indicadorBox = document.getElementById("indicadorPrioridade");
+
+    indicador.textContent = value;
+    indicadorBox.className = `prioridade-indicador prioridade-${value}`;
+
+    const cores = {
+      1: '#10B981',
+      2: '#3B82F6',
+      3: '#FACC15',
+      4: '#FB923C',
+      5: '#EF4444'
+    };
+
+    slider.style.background = cores[value];
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const slider = document.getElementById("prioridade");
+    atualizarPrioridade(slider);
+  });
+</script>

@@ -1,5 +1,5 @@
-{% extends "core/dashboard_base.html" %}
- {% block content %}
+{% extends "core/dashboard_base.html" %} 
+{% block content %}
 
 <style>
   .header-bar {
@@ -51,6 +51,11 @@
     display: flex;
     gap: 2rem;
   }
+  .main-content-area {
+    /* ou qualquer que seja seu container principal */
+    min-height: 100vh;
+    display: flex;
+  }
 
   * {
     box-sizing: border-box;
@@ -72,14 +77,24 @@
     padding: 0;
   }
 
+  .task-list-scroll {
+    overflow-y: auto;
+    height: 100%;
+    padding-right: 4px;
+  }
+
   .app-container {
     border-radius: 8px;
     width: 100%;
-    max-width: 480px;
+    max-width: 380px;
     max-height: 100%;
     background-color: #10101d;
     padding: 24px;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100vh;
   }
 
   .app-header {
@@ -189,56 +204,101 @@
     width: 16px;
     height: 16px;
     background-repeat: no-repeat;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff3d46' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-trash-2'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/%3E%3Cline x1='10' y1='11' x2='10' y2='17'/%3E%3Cline x1='14' y1='11' x2='14' y2='17'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-trash-2'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/%3E%3Cline x1='10' y1='11' x2='10' y2='17'/%3E%3Cline x1='14' y1='11' x2='14' y2='17'/%3E%3C/svg%3E");
     background-size: 16px;
     background-position: center;
     cursor: pointer;
   }
-  span{
+  span {
     color: #fff;
     align-self: auto;
   }
   /* Cores baseadas em prioridade */
-.task-list-item.prioridade-1 input[type="checkbox"],
-.task-list-item.prioridade-1 span {
-  --priority-color: #10B981;
-  color: #10B981;
-}
+  .task-list-item.prioridade-1 input[type="checkbox"],
+  .task-list-item.prioridade-1 span {
+    --priority-color: #10b981;
+    color: #10b981;
+  }
 
-.task-list-item.prioridade-2 input[type="checkbox"],
-.task-list-item.prioridade-2 span {
-  --priority-color: #3B82F6;
-  color: #3B82F6;
-}
+  .task-list-item.prioridade-2 input[type="checkbox"],
+  .task-list-item.prioridade-2 span {
+    --priority-color: #3b82f6;
+    color: #3b82f6;
+  }
 
-.task-list-item.prioridade-3 input[type="checkbox"],
-.task-list-item.prioridade-3 span {
-  --priority-color: #FACC15;
-  color: #FACC15;
-}
+  .task-list-item.prioridade-3 input[type="checkbox"],
+  .task-list-item.prioridade-3 span {
+    --priority-color: #facc15;
+    color: #facc15;
+  }
 
-.task-list-item.prioridade-4 input[type="checkbox"],
-.task-list-item.prioridade-4 span {
-  --priority-color: #FB923C;
-  color: #FB923C;
-}
+  .task-list-item.prioridade-4 input[type="checkbox"],
+  .task-list-item.prioridade-4 span {
+    --priority-color: #fb923c;
+    color: #fb923c;
+  }
 
-.task-list-item.prioridade-5 input[type="checkbox"],
-.task-list-item.prioridade-5 span {
-  --priority-color: #EF4444;
-  color: #EF4444;
-}
+  .task-list-item.prioridade-5 input[type="checkbox"],
+  .task-list-item.prioridade-5 span {
+    --priority-color: #ef4444;
+    color: #ef4444;
+  }
 
-/* Checkboxes com cor da prioridade */
-.task-list-item input[type="checkbox"]:checked {
-  background-color: var(--priority-color);
-  border-color: var(--priority-color);
-}
+  /* Checkboxes com cor da prioridade */
+  .task-list-item input[type="checkbox"]:checked {
+    background-color: var(--priority-color);
+    border-color: var(--priority-color);
+  }
   .drag-ghost {
     opacity: 0.4;
     background-color: #2d3748;
   }
+ /* Fundo por prioridade com texto e borda ajustados */
 
+ .task-list-item-label {
+  display: flex;
+  align-items: center; /* Alinha verticalmente */
+  gap: 8px;            /* Espaço entre o checkbox e o texto */
+  font-weight: 600;    /* Para dar destaque ao texto */
+}
+.filtro-bolinha {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-block;
+  border: 2px solid transparent;
+  transition: border 0.2s ease;
+}
+.filtro-bolinha.prioridade- { background-color: #5cd0ec; }
+.filtro-bolinha.prioridade-1 { background-color: #10B981; }
+.filtro-bolinha.prioridade-2 { background-color: #3B82F6; }
+.filtro-bolinha.prioridade-3 { background-color: #FACC15; }
+.filtro-bolinha.prioridade-4 { background-color: #FB923C; }
+.filtro-bolinha.prioridade-5 { background-color: #EF4444; }
+
+
+.filtro-bolinha.selecionado {
+  border-color: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+}
+.task-list-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.task-list-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.task-list-scroll::-webkit-scrollbar-thumb {
+  background-color: #334155; /* cor da barra */
+  border-radius: 10px;
+  border: 2px solid #0f172a; /* padding interno */
+}
+
+.task-list-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
+}
 
 
   @supports (-webkit-appearance: none) or (-moz-appearance: none) {
@@ -268,48 +328,104 @@
     >
       <i class="bi bi-upload me-1"></i> Upload de Arquivo
     </button>
-  </div>
-</div>
-<div class="app-container">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="app-header">Tarefas</h1>
     <button
-        class="btn btn-outline-success me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#novaTarefaModal"
-      ><i class="bi bi-plus-circle" ></i>
-      </button>
-
+    class="btn btn-outline-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#uploadArquivoModal"
+  >
+    <i class="bi bi-upload me-1"></i> Adicionar orçamento
+  </button>
   </div>
-  <ul id="lista-tarefas" class="task-list">
-    {% for tarefa in tarefas %}
-      <li class="task-list-item prioridade-{{ tarefa.prioridade }}" data-id="{{ tarefa.id }}">
-        <label class="task-list-item-label">
-          <input type="checkbox">
-          <span class="fw-bold">{{ tarefa.titulo }}</span>
-        </label>
-        <span class="delete-btn"
-              title="Deletar"
-              data-projeto-id="{{ projeto.id }}"
-              data-tarefa-id="{{ tarefa.id }}"
-              onclick="deletarTarefa(this)"
-              >
-        </span>
-      </li>
-    {% empty %}
-      <p class="text-light">Nenhuma tarefa cadastrada.</p>
-    {% endfor %}
-  </ul>
-  
 </div>
+
+
+<div class="app-container d-flex flex-column">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="app-header mb-0">Tarefas</h1>
+    <button
+      class="btn btn-success rounded-circle d-flex align-items-center justify-content-center"
+      style="width: 40px; height: 40px"
+      data-bs-toggle="modal"
+      data-bs-target="#novaTarefaModal"
+      title="Nova Tarefa"
+    >
+      <i class="bi bi-plus-circle"></i>
+    </button>
+  </div>
+  <div class="d-flex align-items-center gap-3 mb-3">
+    <span class="fw-bold text-light">Filtrar:</span>
+    {% for nivel in "12345" %}
+      <span class="filtro-bolinha prioridade-{{ nivel }}" onclick="filtrarPorPrioridade({{ nivel }})" title="Prioridade {{ nivel }}"></span>
+    {% endfor %}
+    <span class="filtro-bolinha prioridade-{{ nivel }}" style="cursor:pointer;" onclick="mostrarTodasTarefas()"></span>
+  </div>
+  
+  
+
+  <div class="flex-grow-1 overflow-hidden">
+    <div class="task-list-scroll h-100">
+      <ul id="lista-tarefas" class="task-list">
+        {% for tarefa in tarefas %}
+        <li
+          class="task-list-item prioridade-{{ tarefa.prioridade }}"
+          data-id="{{ tarefa.id }}"
+        >
+          <label class="task-list-item-label">
+            <input type="checkbox" />
+            <span style="color: #10101d; font-weight: 600;">{{ tarefa.titulo }}</span>
+          </label>
+          <span
+            class="delete-btn"
+            title="Deletar"
+            data-projeto-id="{{ projeto.id }}"
+            data-tarefa-id="{{ tarefa.id }}"
+            onclick="deletarTarefa(this)"
+            style="color: #10101d;"
+          >
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    Sortable.create(document.getElementById('lista-tarefas'), {
-      animation: 200,
-      easing: "cubic-bezier(1, 0, 0, 1)",
-      ghostClass: "drag-ghost",
+  document.addEventListener("DOMContentLoaded", function () {
+    const lista = document.getElementById("lista-tarefas");
+
+    // 1. Habilita drag and drop
+    new Sortable(lista, {
+      animation: 150,
+      onEnd: function () {
+        const ordem = Array.from(lista.children).map((li) => li.dataset.id);
+        localStorage.setItem("ordem_tarefas", JSON.stringify(ordem));
+      },
     });
+
+    // 2. Reorganiza ao carregar a página
+    const ordemSalva = JSON.parse(
+      localStorage.getItem("ordem_tarefas") || "[]"
+    );
+    if (ordemSalva.length) {
+      const tarefas = Array.from(lista.children);
+      const mapa = {};
+      tarefas.forEach((el) => (mapa[el.dataset.id] = el));
+
+      lista.innerHTML = ""; // limpa a lista
+
+      ordemSalva.forEach((id) => {
+        if (mapa[id]) lista.appendChild(mapa[id]);
+      });
+
+      // adiciona as tarefas que foram novas
+      tarefas.forEach((el) => {
+        if (!ordemSalva.includes(el.dataset.id)) lista.appendChild(el);
+      });
+    }
   });
+
 </script>
 
 <script>
@@ -328,22 +444,37 @@
       method: "POST",
       headers: {
         "X-CSRFToken": "{{ csrf_token }}",
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        location.reload();  // ou remova a tarefa da tela com JS
-      } else {
-        alert("Erro ao deletar tarefa: " + data.error);
-      }
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          location.reload(); // ou remova a tarefa da tela com JS
+        } else {
+          alert("Erro ao deletar tarefa: " + data.error);
+        }
+      });
+  }
+</script>
+<script>
+  function filtrarPorPrioridade(nivel) {
+    document.querySelectorAll(".task-list-item").forEach(el => {
+      el.style.display = el.classList.contains("prioridade-" + nivel) ? "flex" : "none";
     });
+
+    document.querySelectorAll(".filtro-bolinha").forEach(el => el.classList.remove("selecionado"));
+    const selected = document.querySelector(`.filtro-bolinha.prioridade-${nivel}`);
+    if (selected) selected.classList.add("selecionado");
+  }
+
+  function mostrarTodasTarefas() {
+    document.querySelectorAll(".task-list-item").forEach(el => el.style.display = "flex");
+    document.querySelectorAll(".filtro-bolinha").forEach(el => el.classList.remove("selecionado"));
   }
 </script>
 
 
 
-
-{% include "core/modals/nova_tarefa.html" %}
- {% endblock %}
+{% include "core/modals/nova_tarefa.html" %} 
+{% endblock %}

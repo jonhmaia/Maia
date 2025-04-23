@@ -197,12 +197,12 @@ def projeto_detalhe_view(request, projeto_id):
 def criar_tarefa_view(request, projeto_id):
     if request.method == "POST":
         titulo = request.POST.get("titulo")
-        descricao = request.POST.get("descricao")
-        status = request.POST.get("status")
+       
+      
         prioridade = request.POST.get("prioridade")
 
         # Verificação básica
-        if not titulo or not status or not prioridade:
+        if not titulo or not prioridade:
             messages.error(request, "Preencha todos os campos obrigatórios.")
             return redirect("projeto_detalhe", projeto_id=projeto_id)
 
@@ -210,8 +210,7 @@ def criar_tarefa_view(request, projeto_id):
             payload = {
                 "projeto_id": str(projeto_id),
                 "titulo": titulo,
-                "descricao": descricao,
-                "status": status.lower().replace(" ", "_"),
+              
                 "prioridade": int(prioridade) if prioridade else 1,
             }
             supabase.table("tarefas").insert(payload).execute()
@@ -234,6 +233,84 @@ def deletar_tarefa(request, projeto_id, tarefa_id):
     if request.method == "POST":
         try:
             supabase.table("tarefas").delete().eq("id", str(tarefa_id)).execute()
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+        
+    return JsonResponse({"success": False, "error": "Método inválido"})
+
+
+
+from django.shortcuts import redirect
+from django.contrib import messages
+from .supabase_client import supabase
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.dateparse import parse_date
+from datetime import datetime
+
+@csrf_exempt
+@login_required
+def criar_lancamento_orcamento_view(request, projeto_id):
+    if request.method == "POST":
+        tipo = request.POST.get("tipo")  # entrada ou saída
+        categoria = request.POST.get("categoria")
+        valor = request.POST.get("valor")
+        data = request.POST.get("data")
+        descricao = request.POST.get("descricao")
+
+        if not tipo or not valor or not data:
+            messages.error(request, "Preencha todos os campos obrigatórios.")
+            return redirect("projeto_detalhe", projeto_id=projeto_id)
+
+        try:
+            payload = {
+                "projeto_id": projeto_id,
+                "tipo": tipo,
+                "categoria": categoria,
+                "valor": float(valor),
+                "data": parse_date(data),
+                "descricao": descricao
+            }
+            supabase.table("lancamentos_orcamento").insert(payload).execute()
+            messages.success(request, "Lançamento criado com sucesso!")
+        except Exception as e:
+            print("Erro ao criar lançamento:", e)
+            messages.error(request, "Erro ao criar lançamento.")
+
+    return redirect("projeto_detalhe", projeto_id=projeto_id)
+
+
+
+@login_required
+def editar_lancamento_view(request, projeto_id, lancamento_id):
+    if request.method == "POST":
+        tipo = request.POST.get("tipo")
+        categoria = request.POST.get("categoria")
+        valor = request.POST.get("valor")
+        data = request.POST.get("data")
+        descricao = request.POST.get("descricao")
+
+        try:
+            payload = {
+                "tipo": tipo,
+                "categoria": categoria,
+                "valor": float(valor),
+                "data": data,
+                "descricao": descricao,
+            }
+            supabase.table("lancamentos_orcamento").update(payload).eq("id", str(lancamento_id)).execute()
+            messages.success(request, "Lançamento atualizado com sucesso!")
+        except Exception as e:
+            messages.error(request, f"Erro ao editar lançamento: {e}")
+
+    return redirect("projeto_detalhe", projeto_id=projeto_id)
+
+@csrf_exempt
+@login_required
+def deletar_lancamento_view(request, projeto_id, lancamento_id):
+    if request.method == "POST":
+        try:
+            supabase.table("lancamentos_orcamento").delete().eq("id", str(lancamento_id)).execute()
             return JsonResponse({"success": True})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
